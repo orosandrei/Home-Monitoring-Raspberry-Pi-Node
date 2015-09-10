@@ -9,8 +9,8 @@ The project is designed as a end to end solution for a DIY Home Monitoring & Int
 If an Alarm is triggered, you get a SMS notification on your phone and the snapshots taken during the Alarm time span (customizable - default is 10 minutes) are uploaded via FTP to your server.  
  
 Activation / Deactivation of the Alarm Mode can be done in 2 ways:  
-1. from the Web Client user interface 
-2. with a Button - for convenience reasons: it is faster than connecting from your phone / pc & toggling the Alert Mode checkbox 
+ 1. from the Web Client user interface 
+ 2. with a Button - for convenience reasons: it is faster than connecting from your phone / pc & toggling the Alert Mode checkbox 
     - you simply toggle the Alert mode with the press of a button  
     - there is a 10 seconds customizable delay which allows you to move out of the PIR sensor range 
     - a Led indicates the Alarm Mode enabled/disabled status 
@@ -34,13 +34,16 @@ The project was developed using:
 ## Project components 
  
 ### Hardware 
-
+```javascript
+this.Gpio = require('pi-gpio');
+this.Hardware = { MotionSensor : 8, Led : 26, Button : 12 };
+```
 - Raspberry Pi 
   - I used *Model B Revision 2* with *Raspbian* - any model should be ok, just be careful with the Gpio configuration pin mappings, they can differ 
   - Generic USB webcam (compatible with Raspberry Pi & Raspbian) 
   - You can find a comprehensive list here http://elinux.org/RPi_USB_Webcams  
   - I used a very old 2MP one which seems to work out of the box with the generic drivers 
-- Led & Button 
+- Led & Button  
 ![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/button-led-brick.png?raw=true "Brick Button Led")
 - PIR motion sensor 
 ![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/pir.jpg?raw=true "PIR sensor")
@@ -70,11 +73,16 @@ It is the basic application object, defined to be reusable in other projects
 Contains the basic server code, generic config file read/write operations, generic Init & Execute & Exit methods implementations 
  
 #### Home Monitoring ```ApplicationHM.js``` 
-- ```config.ini``` file 
-![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/config.PNG?raw=true "Config")
+- config.ini file 
+  - default video quality & alert mode settings
+  - Twilio sms Api Sid, Token, To number, From number 
+  - Ftp settings
 - Authentication (digest http authentication) - defaults are **admin** & **password** :) 
   - You can change them from the ```htdigest``` file (nice helper tool here http://websistent.com/tools/htdigest-generator-tool/ ) 
-![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/authentication-htdigest.PNG?raw=true "Http Digest Authentication")  
+  ```
+  admin:Private:6982db7f1ddc36a0b47b5f8427dc3526
+  ```
+
 - Web Client application (with Websockets) 
   - Accessible from anywhere via [port forwarding](https://en.wikipedia.org/wiki/Port_forwarding)
   - Available also on mobile (responsive web client) 
@@ -97,7 +105,24 @@ By default the 480p at 25fps is enabled (initial settings are loaded from the ``
 My webcam is a low-end 5+ years old 2mp device, but for those of you with better webcams I also added 720p & 1080p 
 
 Video resolutions & fps can be configured from the ```/static/js/script.js``` file 
-![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/script-config.PNG?raw=true "Video Quality Configuration")  
+```javascript
+//only check quality settings
+if(ui.quality480p.prop('checked')) {
+	appConfig.monitoring.quality = "640x480";
+	appConfig.monitoring.fps = 25;
+}
+if(ui.quality720p.prop('checked')) { 
+	appConfig.monitoring.quality = "1280x720";			
+	appConfig.monitoring.fps = 25;
+}
+if(ui.quality1080p.prop('checked')) { 
+	appConfig.monitoring.quality = "1920x1080";			
+	appConfig.monitoring.fps = 25;
+}
+	
+//send to server new config settings
+socket.emit('update config quality', appConfig);
+```
  
 #### Alert Mode 
 - initial state is loaded from the ```config.ini``` file 
@@ -116,20 +141,35 @@ The dropdown shows a list of all connected clients (connection timestamp & IP) t
  
 ### Shell Scripts 
  
-```
-start-app.sh
-``` 
+**start-app.sh**
 - You can start the application in 2 modes: 
   - Interactive (for dev / testing): ```./start-app.sh```
   - Background: ```./start-app.sh -background```
-![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/start-app.PNG?raw=true "Start App Script")  
+```
+#!/bin/bash
+# application start in interactive or background mode
+#arguments:  [-background]
 
+cd /home/pi/Desktop/rpiWorkspace/Node/HomeMonitoring/
+
+if [ "$1" = "-background" ]; then
+	sudo nohup node ./App-home-monitoring.js &>log.txt &
+else
+	sudo node ./App-home-monitoring.js 
+fi
+```
   
-```
-start-webcam.sh  
-```
+**start-webcam.sh**
 - Used by the application to enable/disable video streaming when clients are connected or when an Alarm is triggered by the PIR sensor. 
-![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/start-webcam.PNG?raw=true "Start Webcam Script")  
+```
+#!/bin/bash
+# webcam video stream
+# arguments:  [resolution] [port] [fps]
+
+pkill mjpg_streamer
+
+sudo nohup ./mjpg-streamer/mjpg_streamer -i "./mjpg-streamer/input_uvc.so -y -r $1 -f $3 -q 75" -o "./mjpg-streamer/output_http.so -n -p $2" &
+```
 
 ---
  
@@ -145,6 +185,8 @@ start-webcam.sh
 - SMS Api - Twilio - https://www.twilio.com/sms  
 - Bootstrap http://getbootstrap.com/ 
 - App Webcam Icon - https://www.iconfinder.com/icons/71274/webcam_icon#size=128  
+
+
 ---
 **Links**
 - [Hackster.io project](https://www.hackster.io/andreioros) 
