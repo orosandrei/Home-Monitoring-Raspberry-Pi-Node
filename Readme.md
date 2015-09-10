@@ -85,7 +85,7 @@ Contains the basic server code, generic config file read/write operations, gener
   admin:Private:6982db7f1ddc36a0b47b5f8427dc3526
   ```
 
-- Web Client application (with Websockets) 
+- Web Client application
   - Accessible from anywhere via [port forwarding](https://en.wikipedia.org/wiki/Port_forwarding)
   - Available also on mobile (responsive web client) 
 - Monitoring - gets video from [Mjpg_streamer](http://sourceforge.net/projects/mjpg-streamer/) server and sends it to the connected app clients 
@@ -147,7 +147,7 @@ The dropdown shows a list of all connected clients (connection timestamp & IP) t
 - You can start the application in 2 modes: 
   - Interactive (for dev / testing): ```./start-app.sh```
   - Background: ```./start-app.sh -background```
-```
+```shell
 #!/bin/bash
 # application start in interactive or background mode
 #arguments:  [-background]
@@ -163,7 +163,7 @@ fi
   
 **start-webcam.sh**
 - Used by the application to enable/disable video streaming when clients are connected or when an Alarm is triggered by the PIR sensor. 
-```
+```shell
 #!/bin/bash
 # webcam video stream
 # arguments:  [resolution] [port] [fps]
