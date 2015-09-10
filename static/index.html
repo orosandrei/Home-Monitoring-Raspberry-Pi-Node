@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="mobile-web-app-capable" content="yes"/>
+	<link rel="icon" href="favicon.png">
+	<meta name="msapplication-TileColor" content="#fff">
+	<meta name="msapplication-TileImage" content="favicon.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="favicon180x180.png">
+	<title>Home Monitoring</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+
+    <div id="wrap" class="container"> 
+
+      <div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+			<div class="pull-left">
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="480p">
+						<input type="radio" name="quality-480p" id="quality-480p" autocomplete="off"/><span>480p</span>
+					</label>
+					<label class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="720p">
+						<input type="radio" name="quality-720p" id="quality-720p" autocomplete="off"/><span>720p</span>
+					</label>
+					<label class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="1080p">
+						<input type="radio" name="quality-1080p" id="quality-1080p" autocomplete="off"/><span>1080p</span>
+					</label>
+				</div>	
+				<label class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Alert Mode">
+					<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Alert Mode &nbsp;
+					<input type="checkbox" id="alert-mode"/> 
+				</label>	
+			</div>
+			<div class="dropdown pull-left clients-wrap" data-toggle="tooltip" data-placement="left" title="Connected Clients">
+				<a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+					<span class="glyphicon glyphicon-user" aria-hidden="true"></span> &nbsp;
+					<span class="badge" id="clients-count">0</span>
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu" id="clients">	</ul>
+			</div>
+		</div>
+      </div>
+
+
+      <div class="row">
+		<div class="col-sm-12" id="image-container">
+			<img src="#" id="image-preloader" />
+			<img src="loading.png" class="img-responsive" id="image-view" />
+		</div>		
+      </div>
+      <div class="row">		
+		<div id="timestamp" class="col-sm-12">
+			
+		</div>
+      </div>
+	  
+
+      <footer class="footer">
+        <p><a href="https://github.com/orosandrei" target="_blank">github.com/orosandrei</a></p>
+      </footer>
+
+    </div> <!-- /container -->
+	
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>	
+
+  </body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "name": "HomeMonitoring",
+  "version": "1.0.0",
+  "description": "Home Monitoring from web browser / mobile with node.js and raspberry pi",
+  "main": "App-home-monitoring.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Webcam",
+    "Home Monitoring",
+    "Raspberry Pi",
+    "Motion detection",
+    "Pir sensor",
+    "Alarm",
+    "SMS",
+    "SMS notification",
+    "FTP",
+    "FTP snapshots upload"
+  ],
+  "author": "Andrei Oros",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.12.3",
+    "ftp": "^0.3.10",
+    "http-auth": "^2.2.8",
+    "ini": "^1.3.4",
+    "pi-gpio": "0.0.7",
+    "socket.io": "^1.3.5",
+    "twilio": "^2.3.0"
+  },
+  "devDependencies": {}
+}

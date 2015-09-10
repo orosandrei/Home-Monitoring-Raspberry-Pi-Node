@@ -1,0 +1,15 @@
+body { background: #efefef; }
+
+#wrap { margin-top:25px; }
+
+#image-container { margin: 10px 0 10px 0; }
+#image-container img { margin: 0 auto 0 auto; }
+#image-preloader { display: none; }
+#image-view { margin: 0 auto 0 auto; max-height: 95%; }
+
+#clients li a { cursor: default; }
+.clients-wrap { margin-left: 4px;}
+
+.footer, #timestamp { text-align: center; }
+
+.alarm { background-color: #FFAEA3;}
