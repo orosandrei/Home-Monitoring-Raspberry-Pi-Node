@@ -34,6 +34,7 @@ The project was developed using:
 ## Project components 
  
 ### Hardware 
+![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/diagram.PNG?raw=true "Pir Button Led RaspberryPi Gpio")
 ```javascript
 this.Gpio = require('pi-gpio');
 this.Hardware = { MotionSensor : 8, Led : 26, Button : 12 };
@@ -46,6 +47,7 @@ this.Hardware = { MotionSensor : 8, Led : 26, Button : 12 };
 - Led & Button  
 ![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/button-led-brick.png?raw=true "Brick Button Led")
 - PIR motion sensor 
+
 ![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/pir.jpg?raw=true "PIR sensor")
   - The one I used is available here https://www.sparkfun.com/products/13285  
   - It normally connects to Analog Input (ex. on Arduino); however you can use it with Digital as well if you connect a 10K resistor between VCC & Signal  
