@@ -36,31 +36,24 @@
 <h2>
 <a id="description" class="anchor" href="#description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Description</h2>
 
-<p>The project is designed as a end to end solution for a DIY Home Monitoring &amp; Intruder Alert system. Besides offering a live video stream on any device (web responsive client), it also actively monitors for movement with the help of a PIR sensor.   </p>
+<p>The project is designed as a end to end solution for a DIY <strong>Home Monitoring &amp; Intruder Alert system</strong>. Besides offering a live video stream on any device (web responsive client), it also actively monitors for movement with the help of a <em>PIR sensor</em>.</p>
 
-<p>If an Alarm is triggered, you get a SMS notification on your phone and the snapshots taken during the Alarm time span (customizable - default is 10 minutes) are uploaded via FTP to your server.  </p>
+<p>If an <em>Alarm</em> is triggered, you get a SMS notification on your phone and the snapshots taken during the <em>Alarm time span</em> (customizable - default is 1 minute) are uploaded via FTP to your server.  </p>
 
-<p>Activation / Deactivation of the Alarm Mode can be done in 2 ways:  </p>
+<p>Activation / Deactivation of the <em>Alarm Mode</em> can be done in 2 ways:  </p>
 
 <ol>
 <li>from the Web Client user interface </li>
 <li>with a Button - for convenience reasons: it is faster than connecting from your phone / pc &amp; toggling the Alert Mode checkbox 
 
 <ul>
-<li>you simply toggle the Alert mode with the press of a button<br>
-</li>
 <li>there is a 10 seconds customizable delay which allows you to move out of the PIR sensor range </li>
 <li>a Led indicates the Alarm Mode enabled/disabled status </li>
 </ul>
 </li>
 </ol>
 
-<p>In order to avoid false positives from the PIR motion sensor, extra checks were added - a detection counter &amp; detection interval - in order for the Alarm to get triggered, the sensor needs to detect movement 3 times in 5 seconds (both values configurable in code). </p>
-
-<h2>
-<a id="source-code" class="anchor" href="#source-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Source Code</h2>
-
-<p>The source code is open source (MIT License)</p>
+<p>In order to avoid false positives from the PIR motion sensor, extra checks were added - a detection counter &amp; detection interval. The Alarm gets triggered when the sensor detects movement 3 times in 5 seconds (both values configurable in code).</p>
 
 <h2>
 <a id="technology" class="anchor" href="#technology" aria-hidden="true"><span class="octicon octicon-link"></span></a>Technology</h2>
@@ -94,7 +87,7 @@
 <li>Raspberry Pi 
 
 <ul>
-<li>I used <em>Model B Revision 2</em> with <em>Raspbian</em> - any model should be ok, just be careful with the Gpio configuration pin mappings, they can differ </li>
+<li>I used <em>Model B Revision 2</em> with <em>Raspbian</em> - any model should be Ok, just be careful with the Gpio configuration pin mappings, they can differ </li>
 <li>Generic USB webcam (compatible with Raspberry Pi &amp; Raspbian) </li>
 <li>You can find a comprehensive list here <a href="http://elinux.org/RPi_USB_Webcams">http://elinux.org/RPi_USB_Webcams</a><br>
 </li>
@@ -155,7 +148,7 @@ Contains the basic server code, generic config file read/write operations, gener
 
 <ul>
 <li>default video quality &amp; alert mode settings</li>
-<li>Twilio sms Api Sid, Token, To number, From number </li>
+<li>Twilio sms Api <em>Sid</em>, <em>Token</em>, <em>To</em> number, <em>From</em> number </li>
 <li>Ftp settings</li>
 </ul>
 </li>
@@ -195,8 +188,9 @@ Contains the basic server code, generic config file read/write operations, gener
 <h3>
 <a id="web-client---responsive" class="anchor" href="#web-client---responsive" aria-hidden="true"><span class="octicon octicon-link"></span></a>Web Client - responsive</h3>
 
-<p>The client application was designed to be accessible on all platforms (pc / tablet / mobile). 
-<img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/client.PNG?raw=true" alt="Alt text" title="Web Client">  </p>
+<p>The client application was designed to be accessible on all platforms (pc / tablet / mobile). </p>
+
+<p><img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/client.PNG?raw=true" alt="Alt text" title="Web Client">  </p>
 
 <h4>
 <a id="video-streaming-quality-settings" class="anchor" href="#video-streaming-quality-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Video streaming quality settings</h4>
@@ -287,13 +281,16 @@ pkill mjpg_streamer
 
 sudo nohup ./mjpg-streamer/mjpg_streamer -i <span class="pl-s"><span class="pl-pds">"</span>./mjpg-streamer/input_uvc.so -y -r <span class="pl-smi">$1</span> -f <span class="pl-smi">$3</span> -q 75<span class="pl-pds">"</span></span> -o <span class="pl-s"><span class="pl-pds">"</span>./mjpg-streamer/output_http.so -n -p <span class="pl-smi">$2</span><span class="pl-pds">"</span></span> <span class="pl-k">&amp;</span></pre></div>
 
+<h2>
+<a id="application-execution-session-example" class="anchor" href="#application-execution-session-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Application Execution Session example</h2>
+
+<p><img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/session.PNG?raw=true" alt="Alt text" title="Application Execution Session example">  </p>
+
 <hr>
 
-<p><strong>TO DO</strong></p>
+<p><strong>TO DO</strong> </p>
 
 <ul>
-<li>Some code clean-up &amp; optimizations<br>
-</li>
 <li>Port the application to Windows 10 Iot on Raspberry Pi 2 </li>
 <li>Support for uploading snapshots to cloud (OneDrive / Dropbox) when an Alarm is triggered </li>
 </ul>
@@ -319,8 +316,10 @@ sudo nohup ./mjpg-streamer/mjpg_streamer -i <span class="pl-s"><span class="pl-p
 <p><strong>Links</strong></p>
 
 <ul>
+<li>Blog post about project <a href="http://andreioros.com/blog/home-monitoring-raspberry-pi-node/%20">Home Monitoring with Raspberry Pi &amp; Node</a>
+</li>
 <li>
-<a href="https://www.hackster.io/andreioros">Hackster.io project</a> </li>
+<a href="https://www.hackster.io/andreioros">Hackster.io project page</a> </li>
 <li>twitter <a href="https://twitter.com/orosandrei">@orosandrei</a>
 </li>
 </ul>
