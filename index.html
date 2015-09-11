@@ -1,0 +1,346 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Home-monitoring-raspberry-pi-node by orosandrei</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Home-monitoring-raspberry-pi-node</h1>
+        <p>DIY Home Monitoring &amp; Intruder Alert system</p>
+
+        <p class="view"><a href="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node">View the Project on GitHub <small>orosandrei/Home-Monitoring-Raspberry-Pi-Node</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="home-monitoring-with-raspberry-pi-and-nodejs" class="anchor" href="#home-monitoring-with-raspberry-pi-and-nodejs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Home Monitoring with Raspberry Pi and Node.js</h1>
+
+<p><img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/system.jpg?raw=true" alt="Alt text" title="Home Monitoring with Raspberry Pi and Node.js"></p>
+
+<h2>
+<a id="description" class="anchor" href="#description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Description</h2>
+
+<p>The project is designed as a end to end solution for a DIY Home Monitoring &amp; Intruder Alert system. Besides offering a live video stream on any device (web responsive client), it also actively monitors for movement with the help of a PIR sensor.   </p>
+
+<p>If an Alarm is triggered, you get a SMS notification on your phone and the snapshots taken during the Alarm time span (customizable - default is 10 minutes) are uploaded via FTP to your server.  </p>
+
+<p>Activation / Deactivation of the Alarm Mode can be done in 2 ways:  </p>
+
+<ol>
+<li>from the Web Client user interface </li>
+<li>with a Button - for convenience reasons: it is faster than connecting from your phone / pc &amp; toggling the Alert Mode checkbox 
+
+<ul>
+<li>you simply toggle the Alert mode with the press of a button<br>
+</li>
+<li>there is a 10 seconds customizable delay which allows you to move out of the PIR sensor range </li>
+<li>a Led indicates the Alarm Mode enabled/disabled status </li>
+</ul>
+</li>
+</ol>
+
+<p>In order to avoid false positives from the PIR motion sensor, extra checks were added - a detection counter &amp; detection interval - in order for the Alarm to get triggered, the sensor needs to detect movement 3 times in 5 seconds (both values configurable in code). </p>
+
+<h2>
+<a id="source-code" class="anchor" href="#source-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Source Code</h2>
+
+<p>The source code is open source (MIT License)</p>
+
+<h2>
+<a id="technology" class="anchor" href="#technology" aria-hidden="true"><span class="octicon octicon-link"></span></a>Technology</h2>
+
+<p>The project was developed using: </p>
+
+<ul>
+<li>
+<a href="http://raspberrypi.org">Raspberry Pi</a> - <a href="https://www.raspbian.org/">raspbian</a>, brick button &amp; led, Pir sensor</li>
+<li>
+<a href="https://nodejs.org/en/">Node.js</a> - for the main application </li>
+<li>
+<a href="http://sourceforge.net/projects/mjpg-streamer/">Mjpg_streamer</a> - to generate the video stream </li>
+<li>Shell scripting - for easy application start (interactive &amp; background) </li>
+<li>Htms/Css/Javascript + <a href="http://getbootstrap.com/">Bootstrap</a> - the web client<br>
+</li>
+</ul>
+
+<h2>
+<a id="project-components" class="anchor" href="#project-components" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project components</h2>
+
+<h3>
+<a id="hardware" class="anchor" href="#hardware" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hardware</h3>
+
+<p><img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/diagram.PNG?raw=true" alt="Alt text" title="Pir Button Led RaspberryPi Gpio"></p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-v">this</span>.Gpio <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>pi-gpio<span class="pl-pds">'</span></span>);
+<span class="pl-v">this</span>.Hardware <span class="pl-k">=</span> { MotionSensor <span class="pl-k">:</span> <span class="pl-c1">8</span>, Led <span class="pl-k">:</span> <span class="pl-c1">26</span>, <span class="pl-c1">Button</span> <span class="pl-k">:</span> <span class="pl-c1">12</span> };</pre></div>
+
+<ul>
+<li>Raspberry Pi 
+
+<ul>
+<li>I used <em>Model B Revision 2</em> with <em>Raspbian</em> - any model should be ok, just be careful with the Gpio configuration pin mappings, they can differ </li>
+<li>Generic USB webcam (compatible with Raspberry Pi &amp; Raspbian) </li>
+<li>You can find a comprehensive list here <a href="http://elinux.org/RPi_USB_Webcams">http://elinux.org/RPi_USB_Webcams</a><br>
+</li>
+<li>I used a very old 2MP one which seems to work out of the box with the generic drivers </li>
+</ul>
+</li>
+<li>Led &amp; Button<br>
+<img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/button-led-brick.png?raw=true" alt="Alt text" title="Brick Button Led">
+</li>
+<li>PIR motion sensor </li>
+</ul>
+
+<p><img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/pir.jpg?raw=true" alt="Alt text" title="PIR sensor"></p>
+
+<ul>
+<li>The one I used is available here <a href="https://www.sparkfun.com/products/13285">https://www.sparkfun.com/products/13285</a><br>
+</li>
+<li>It normally connects to Analog Input (ex. on Arduino); however you can use it with Digital as well if you connect a 10K resistor between VCC &amp; Signal<br>
+<img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/pir-10k-resistor.jpg?raw=true" alt="Alt text" title="PIR resistor"> </li>
+<li>To make things easier you can purchase this sensor <a href="https://www.adafruit.com/products/189">https://www.adafruit.com/products/189</a> and skip the soldering part (+ this one has configurable sensitivity built-in, so you might be able to skip the one implemented in the code)<br>
+</li>
+</ul>
+
+<h3>
+<a id="node-application" class="anchor" href="#node-application" aria-hidden="true"><span class="octicon octicon-link"></span></a>Node application</h3>
+
+<h4>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h4>
+
+<ul>
+<li>express: ^4.12.3 </li>
+<li>ftp: ^0.3.10 </li>
+<li>http-auth: ^2.2.8 </li>
+<li>ini: ^1.3.4 </li>
+<li>pi-gpio: 0.0.7 </li>
+<li>socket.io: ^1.3.5 </li>
+<li>twilio: ^2.3.0 </li>
+</ul>
+
+<p>The dependencies you install with NPM: </p>
+
+<pre><code>npm install module --save
+</code></pre>
+
+<h4>
+<a id="generic-applicationjs" class="anchor" href="#generic-applicationjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generic <code>Application.js</code>
+</h4>
+
+<p>It is the basic application object, defined to be reusable in other projects 
+Contains the basic server code, generic config file read/write operations, generic Init &amp; Execute &amp; Exit methods implementations </p>
+
+<h4>
+<a id="home-monitoring-applicationhmjs" class="anchor" href="#home-monitoring-applicationhmjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Home Monitoring <code>ApplicationHM.js</code>
+</h4>
+
+<ul>
+<li>config.ini file 
+
+<ul>
+<li>default video quality &amp; alert mode settings</li>
+<li>Twilio sms Api Sid, Token, To number, From number </li>
+<li>Ftp settings</li>
+</ul>
+</li>
+<li>
+<p>Authentication (digest http authentication) - defaults are <strong>admin</strong> &amp; <strong>password</strong> :) </p>
+
+<ul>
+<li>You can change them from the <code>htdigest</code> file (nice helper tool here <a href="http://websistent.com/tools/htdigest-generator-tool/">http://websistent.com/tools/htdigest-generator-tool/</a> ) </li>
+</ul>
+
+<pre><code>admin:Private:6982db7f1ddc36a0b47b5f8427dc3526
+</code></pre>
+</li>
+<li>
+<p>Web Client application</p>
+
+<ul>
+<li>Accessible from anywhere via <a href="https://en.wikipedia.org/wiki/Port_forwarding">port forwarding</a>
+</li>
+<li>Available also on mobile (responsive web client) </li>
+</ul>
+</li>
+<li>Monitoring - gets video from <a href="http://sourceforge.net/projects/mjpg-streamer/">Mjpg_streamer</a> server and sends it to the connected app clients </li>
+<li>
+<a href="http://sourceforge.net/projects/mjpg-streamer/">Mjpg_streamer</a> was used as server, but if you prefer another tool like ffmpeg, you can easily replace it because of the loose integration via the <code>start-webcam.sh</code> script </li>
+</ul>
+
+<h4>
+<a id="alarm-mode" class="anchor" href="#alarm-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Alarm mode</h4>
+
+<ul>
+<li>Monitoring - via PIR sensor </li>
+<li>Alarm - Sms notification (implemented with the help of <a href="https://www.twilio.com/sms">Twilio</a>   text messaging API - very cool service, offers great Trial account for development </li>
+<li>Alarm - Snapshots upload to server via Ftp </li>
+</ul>
+
+<h3>
+<a id="web-client---responsive" class="anchor" href="#web-client---responsive" aria-hidden="true"><span class="octicon octicon-link"></span></a>Web Client - responsive</h3>
+
+<p>The client application was designed to be accessible on all platforms (pc / tablet / mobile). 
+<img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/client.PNG?raw=true" alt="Alt text" title="Web Client">  </p>
+
+<h4>
+<a id="video-streaming-quality-settings" class="anchor" href="#video-streaming-quality-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Video streaming quality settings</h4>
+
+<p>By default the 480p at 25fps is enabled (initial settings are loaded from the <code>config.ini</code> file) </p>
+
+<p>My webcam is a low-end 5+ years old 2mp device, but for those of you with better webcams I also added 720p &amp; 1080p </p>
+
+<p>Video resolutions &amp; fps can be configured from the <code>/static/js/script.js</code> file </p>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">//only check quality settings</span>
+<span class="pl-k">if</span>(ui.quality480p.prop(<span class="pl-s"><span class="pl-pds">'</span>checked<span class="pl-pds">'</span></span>)) {
+    appConfig.monitoring.quality <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>640x480<span class="pl-pds">"</span></span>;
+    appConfig.monitoring.fps <span class="pl-k">=</span> <span class="pl-c1">25</span>;
+}
+<span class="pl-k">if</span>(ui.quality720p.prop(<span class="pl-s"><span class="pl-pds">'</span>checked<span class="pl-pds">'</span></span>)) { 
+    appConfig.monitoring.quality <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>1280x720<span class="pl-pds">"</span></span>;          
+    appConfig.monitoring.fps <span class="pl-k">=</span> <span class="pl-c1">25</span>;
+}
+<span class="pl-k">if</span>(ui.quality1080p.prop(<span class="pl-s"><span class="pl-pds">'</span>checked<span class="pl-pds">'</span></span>)) { 
+    appConfig.monitoring.quality <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>1920x1080<span class="pl-pds">"</span></span>;         
+    appConfig.monitoring.fps <span class="pl-k">=</span> <span class="pl-c1">25</span>;
+}
+
+<span class="pl-c">//send to server new config settings</span>
+socket.emit(<span class="pl-s"><span class="pl-pds">'</span>update config quality<span class="pl-pds">'</span></span>, appConfig);</pre></div>
+
+<h4>
+<a id="alert-mode" class="anchor" href="#alert-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Alert Mode</h4>
+
+<ul>
+<li>initial state is loaded from the <code>config.ini</code> file </li>
+<li>You can enable/disable monitoring from checkbox button in the UI </li>
+<li>The state of the Alert Mode is shown both in the UI (the checkbox) but also by the LED </li>
+<li>The physical Button can be also used to toggle the Alert Mode </li>
+<li>All state changes are sent to all connected clients </li>
+<li>If an Alarm is triggered, the UI checkbox button background will be changed to Red 
+<img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/alarm.PNG?raw=true" alt="Alt text" title="Alarm"><br>
+</li>
+</ul>
+
+<h4>
+<a id="connected-clients" class="anchor" href="#connected-clients" aria-hidden="true"><span class="octicon octicon-link"></span></a>Connected Clients</h4>
+
+<p>The dropdown shows a list of all connected clients (connection timestamp &amp; IP) that are currently viewing the video stream<br>
+<img src="https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/clients-list.PNG?raw=true" alt="Alt text" title="Connected Clients List">  </p>
+
+<h3>
+<a id="shell-scripts" class="anchor" href="#shell-scripts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shell Scripts</h3>
+
+<p><strong>start-app.sh</strong></p>
+
+<ul>
+<li>You can start the application in 2 modes: 
+
+<ul>
+<li>Interactive (for dev / testing): <code>./start-app.sh</code>
+</li>
+<li>Background: <code>./start-app.sh -background</code>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-shell"><pre><span class="pl-c">#!/bin/bash</span>
+<span class="pl-c"># application start in interactive or background mode</span>
+<span class="pl-c">#arguments:  [-background]</span>
+
+<span class="pl-c1">cd</span> /home/pi/Desktop/rpiWorkspace/Node/HomeMonitoring/
+
+<span class="pl-k">if</span> [ <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$1</span><span class="pl-pds">"</span></span> = <span class="pl-s"><span class="pl-pds">"</span>-background<span class="pl-pds">"</span></span> ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    sudo nohup node ./App-home-monitoring.js <span class="pl-k">&amp;</span><span class="pl-k">&gt;</span>log.txt <span class="pl-k">&amp;</span>
+<span class="pl-k">else</span>
+    sudo node ./App-home-monitoring.js 
+<span class="pl-k">fi</span></pre></div>
+
+<p><strong>start-webcam.sh</strong></p>
+
+<ul>
+<li>Used by the application to enable/disable video streaming when clients are connected or when an Alarm is triggered by the PIR sensor. </li>
+</ul>
+
+<div class="highlight highlight-shell"><pre><span class="pl-c">#!/bin/bash</span>
+<span class="pl-c"># webcam video stream</span>
+<span class="pl-c"># arguments:  [resolution] [port] [fps]</span>
+
+pkill mjpg_streamer
+
+sudo nohup ./mjpg-streamer/mjpg_streamer -i <span class="pl-s"><span class="pl-pds">"</span>./mjpg-streamer/input_uvc.so -y -r <span class="pl-smi">$1</span> -f <span class="pl-smi">$3</span> -q 75<span class="pl-pds">"</span></span> -o <span class="pl-s"><span class="pl-pds">"</span>./mjpg-streamer/output_http.so -n -p <span class="pl-smi">$2</span><span class="pl-pds">"</span></span> <span class="pl-k">&amp;</span></pre></div>
+
+<hr>
+
+<p><strong>TO DO</strong></p>
+
+<ul>
+<li>Some code clean-up &amp; optimizations<br>
+</li>
+<li>Port the application to Windows 10 Iot on Raspberry Pi 2 </li>
+<li>Support for uploading snapshots to cloud (OneDrive / Dropbox) when an Alarm is triggered </li>
+</ul>
+
+<p><strong>References</strong> </p>
+
+<ul>
+<li>Raspberry Pi <a href="https://www.raspberrypi.org/">https://www.raspberrypi.org/</a><br>
+</li>
+<li>Node - <a href="https://nodejs.org/en/">https://nodejs.org/en/</a><br>
+</li>
+<li>Mjpg_streamer <a href="http://sourceforge.net/projects/mjpg-streamer/">http://sourceforge.net/projects/mjpg-streamer/</a><br>
+</li>
+<li>SMS Api - Twilio - <a href="https://www.twilio.com/sms">https://www.twilio.com/sms</a><br>
+</li>
+<li>Bootstrap <a href="http://getbootstrap.com/">http://getbootstrap.com/</a> </li>
+<li>App Webcam Icon - <a href="https://www.iconfinder.com/icons/71274/webcam_icon#size=128">https://www.iconfinder.com/icons/71274/webcam_icon#size=128</a><br>
+</li>
+</ul>
+
+<hr>
+
+<p><strong>Links</strong></p>
+
+<ul>
+<li>
+<a href="https://www.hackster.io/andreioros">Hackster.io project</a> </li>
+<li>twitter <a href="https://twitter.com/orosandrei">@orosandrei</a>
+</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/orosandrei">orosandrei</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-61892-27");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
