@@ -42,13 +42,14 @@ function ApplicationHM(appName, appPort) {
 		parent : {},
 		Active : false,
 		ActiveMotionSensor : false, //needed for the motion start delay 
-		AlarmTimeSpan : 2, //minutes - in this time span, the latest webcam snapshots are uploaded to FTP
+		AlarmTimeSpan : 1, //minutes - in this time span, the latest webcam snapshots are uploaded to FTP
 		AlarmTimer : {},		
 		StartupTimeout : {}, //timer for motion sensor start delay	
 		AlarmTriggered : false,
 		AlarmSensitivity : 3, //max counter for reducing false alarms; only trigger real alarm when this limit is reached
 		AlarmCounter : 0, //consecutive alarm triggers
 		MotionStartDelay : 10000, //10 seconds
+		
 		Deactivate : function(){
 			var parent = this.parent;
 			this.Active = false;
@@ -60,11 +61,15 @@ function ApplicationHM(appName, appPort) {
 			parent.io.sockets.emit('alarm', false);
 			console.log(parent.DateTimeNow() + "(!) Alert - Mode - Inactive");			
 		},		
+		
 		Activate : function() {
 			var parent = this.parent;
-			this.Active = true;
+			this.Active = true;			
+			this.ActiveMotionSensor = false;		
+			this.AlarmCounter = 0;
 			parent.Config.Settings.monitoring.alert = this.Active;
 			parent.Gpio.write(parent.Hardware.Led, 1); // led	on
+			
 			//10 seconds delay so that the person can exit the sensor range	
 			console.log(parent.DateTimeNow() + "(i) Alert - motion detection starts in 10 seconds..");
 			this.StartupTimeout = setTimeout(function(){
@@ -72,12 +77,14 @@ function ApplicationHM(appName, appPort) {
 				console.log(parent.DateTimeNow() + "(i) Alert - Mode - Active");
 			}, this.MotionStartDelay, parent);			
 		},	
+		
 		UpdateState : function(alert){
 			if(alert == true)
 				this.Activate();					
 			else 
 				this.Deactivate();					
 		},
+		
 		AlarmNotify : function(){							
 			var parent = this.parent;
 			this.AlarmCounter += 1; 							
@@ -88,7 +95,9 @@ function ApplicationHM(appName, appPort) {
 						console.log(parent.DateTimeNow() + "(i) Alert - motion detection - reset false+ counter");
 				}
 			},5000, parent); // 5 seconds - interval in which max motion detection counter needs to be reached or exceeded
+			
 			console.log(parent.DateTimeNow() + "(!) Alert - motion detected (" + parent.AlertMode.AlarmCounter + "/" + parent.AlertMode.AlarmSensitivity + "max)");
+			
 			if(this.AlarmCounter >= this.AlarmSensitivity && this.Active == true) {
 				this.AlarmTriggered = true;									
 				//disable motion detection for predefined AlarmTimeSpan
@@ -198,12 +207,13 @@ function ApplicationHM(appName, appPort) {
 					res.on("data", function(newFrame) {
 						// only add valid frames, ignore empty captures smaller than 10K
 						if(newFrame !== undefined && newFrame.length > 1000 && ref.parent.Active == true) {
-							//send image data & timestamp to clients	
+							var frameData = {timestamp: ref.root.DateTimeNow(), data: newFrame};
+							//send image data & timestamp to clients								
 							if(ref.root.appClients.length > 0)
-								ref.root.io.sockets.emit("refresh view", {timestamp: ref.root.DateTimeNow(), data: newFrame});
+								ref.root.io.sockets.emit("refresh view", frameData);
 							//add new frame to buffer only if AlertMode is enabled
-							if(ref.root.AlertMode.Active == true)
-								ref.parent.StreamingBuffer.push({timestamp: ref.root.DateTimeNow(), data: newFrame});
+							if(ref.root.AlertMode.Active == true && ref.root.AlertMode.AlarmTriggered == true)
+								ref.parent.StreamingBuffer.push(frameData);
 						}
 					});
 					res.on("end", function(err){
@@ -255,7 +265,7 @@ ApplicationHM.prototype.Init = function() {
 					parent.AlertMode.AlarmNotify(); 
 				}				
 			});
-		}, 100);
+		}, 500); //pir motion sensor check frequency
 	});
 	//toggle enable or disable Alert Mode with the physical button
 	this.Gpio.open(this.Hardware.Button, "input", function(err){
@@ -370,14 +380,22 @@ ApplicationHM.prototype.Exit = function(parent, data, err) {
 		console.log(parent.DateTimeNow() + "Closing application err < " + err + " >");	
 	if(data)
 		console.log(parent.DateTimeNow() + "Closing application < " + data + " >");	
-	parent.exec("sudo pkill mjpg_streamer");
-	//disable hardware
-	parent.Gpio.write(parent.Hardware.Led, 0);	
+	//kill webcam server
+	parent.exec("sudo pkill mjpg_streamer");	
+	//reset states
+	parent.AlertMode.Active = false;
+	parent.AlertMode.ActiveMotionSensor = false;
+	parent.AlertMode.AlarmCounter = 0;
+	parent.AlertMode.AlarmTriggered = false;
+	parent.Webcam.Active = false;	
+	//disable hardware & exit
 	parent.Gpio.close(parent.Hardware.MotionSensor);
-  	parent.Gpio.close(parent.Hardware.Button);
-	parent.Gpio.close(parent.Hardware.Led);
-	//exit
-	process.exit(data);
+	parent.Gpio.close(parent.Hardware.Button);		
+	parent.Gpio.write(parent.Hardware.Led, 0, function(){		
+		parent.Gpio.close(parent.Hardware.Led);
+		//exit
+		process.exit(0);
+	});	
 };
 
 

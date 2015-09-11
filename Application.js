@@ -28,7 +28,7 @@ function Application(appName, appPort)
 		FilePath : './config.ini',
 		Settings : {},
 		UpdateClientsSettings : function(){			
-			//keep config in sync across all connected clients	
+			//keep config in sync accross all connected clients	
 			if(this.parent.appClients.length > 0) {
 				this.parent.io.sockets.emit('update config', this.Settings);
 				console.log(this.parent.DateTimeNow() + "Configuration updated settings sent to all clients..");
@@ -45,13 +45,6 @@ function Application(appName, appPort)
 		}
 	}	
 }
-
-
-//captured exit event
-Application.prototype.Exit = function(data) {	
-	console.log(this.DateTimeNow() + "Closing application < " + data + " >");
-	process.exit(data);
-};
 
 
 //initialize application
@@ -72,11 +65,17 @@ Application.prototype.Init = function() {
 	console.log(this.DateTimeNow() + this.name + " server started on port " + this.app.get('port'));
 
 	// capture exit events for cleanup
-	if(this.DEBUG == false) {
-		process.on('exit', this.Exit.bind("exit", this));
-		process.on('SIGINT', this.Exit.bind("SIGINT", this));	 
-		process.on('uncaughtException', this.Exit.bind("error", this));
-	}
+	process.on('exit', this.Exit.bind("exit", this));
+	process.on('SIGINT', this.Exit.bind("SIGINT", this));	 
+	process.on('TERM', this.Exit.bind("TERM", this));	 
+	process.on('uncaughtException', this.Exit.bind("error", this));
+};
+
+
+//captured exit event
+Application.prototype.Exit = function(data) {	
+	console.log(this.DateTimeNow() + "Closing application < " + data + " >");
+	process.exit(data);
 };
 
 
