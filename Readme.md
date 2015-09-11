@@ -4,23 +4,17 @@
  
 ## Description  
  
-The project is designed as a end to end solution for a DIY Home Monitoring & Intruder Alert system. Besides offering a live video stream on any device (web responsive client), it also actively monitors for movement with the help of a PIR sensor.   
+The project is designed as a end to end solution for a DIY **Home Monitoring & Intruder Alert system**. Besides offering a live video stream on any device (web responsive client), it also actively monitors for movement with the help of a *PIR sensor*.
  
-If an Alarm is triggered, you get a SMS notification on your phone and the snapshots taken during the Alarm time span (customizable - default is 10 minutes) are uploaded via FTP to your server.  
+If an *Alarm* is triggered, you get a SMS notification on your phone and the snapshots taken during the *Alarm time span* (customizable - default is 1 minute) are uploaded via FTP to your server.  
  
-Activation / Deactivation of the Alarm Mode can be done in 2 ways:  
+Activation / Deactivation of the *Alarm Mode* can be done in 2 ways:  
  1. from the Web Client user interface 
  2. with a Button - for convenience reasons: it is faster than connecting from your phone / pc & toggling the Alert Mode checkbox 
-    - you simply toggle the Alert mode with the press of a button  
     - there is a 10 seconds customizable delay which allows you to move out of the PIR sensor range 
     - a Led indicates the Alarm Mode enabled/disabled status 
  
-In order to avoid false positives from the PIR motion sensor, extra checks were added - a detection counter & detection interval - in order for the Alarm to get triggered, the sensor needs to detect movement 3 times in 5 seconds (both values configurable in code). 
- 
- 
-## Source Code 
- 
-The source code is open source (MIT License)
+In order to avoid false positives from the PIR motion sensor, extra checks were added - a detection counter & detection interval. The Alarm gets triggered when the sensor detects movement 3 times in 5 seconds (both values configurable in code).
  
 ## Technology 
  
@@ -40,7 +34,7 @@ this.Gpio = require('pi-gpio');
 this.Hardware = { MotionSensor : 8, Led : 26, Button : 12 };
 ```
 - Raspberry Pi 
-  - I used *Model B Revision 2* with *Raspbian* - any model should be ok, just be careful with the Gpio configuration pin mappings, they can differ 
+  - I used *Model B Revision 2* with *Raspbian* - any model should be Ok, just be careful with the Gpio configuration pin mappings, they can differ 
   - Generic USB webcam (compatible with Raspberry Pi & Raspbian) 
   - You can find a comprehensive list here http://elinux.org/RPi_USB_Webcams  
   - I used a very old 2MP one which seems to work out of the box with the generic drivers 
@@ -77,7 +71,7 @@ Contains the basic server code, generic config file read/write operations, gener
 #### Home Monitoring ```ApplicationHM.js``` 
 - config.ini file 
   - default video quality & alert mode settings
-  - Twilio sms Api Sid, Token, To number, From number 
+  - Twilio sms Api *Sid*, *Token*, *To* number, *From* number 
   - Ftp settings
 - Authentication (digest http authentication) - defaults are **admin** & **password** :) 
   - You can change them from the ```htdigest``` file (nice helper tool here http://websistent.com/tools/htdigest-generator-tool/ ) 
@@ -99,6 +93,7 @@ Contains the basic server code, generic config file read/write operations, gener
 ### Web Client - responsive
  
 The client application was designed to be accessible on all platforms (pc / tablet / mobile). 
+
 ![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/client.PNG?raw=true "Web Client")  
 
 #### Video streaming quality settings 
@@ -173,10 +168,12 @@ pkill mjpg_streamer
 sudo nohup ./mjpg-streamer/mjpg_streamer -i "./mjpg-streamer/input_uvc.so -y -r $1 -f $3 -q 75" -o "./mjpg-streamer/output_http.so -n -p $2" &
 ```
 
+## Application Execution Session example
+![Alt text](https://github.com/orosandrei/Home-Monitoring-Raspberry-Pi-Node/raw/master/screenshots/session.PNG?raw=true "Application Execution Session example")  
+
 ---
  
-**TO DO**
-- Some code clean-up & optimizations  
+**TO DO** 
 - Port the application to Windows 10 Iot on Raspberry Pi 2 
 - Support for uploading snapshots to cloud (OneDrive / Dropbox) when an Alarm is triggered 
  
@@ -191,5 +188,6 @@ sudo nohup ./mjpg-streamer/mjpg_streamer -i "./mjpg-streamer/input_uvc.so -y -r 
 
 ---
 **Links**
-- [Hackster.io project](https://www.hackster.io/andreioros) 
+- Blog post about project [Home Monitoring with Raspberry Pi & Node](http://andreioros.com/blog/home-monitoring-raspberry-pi-node/%20)
+- [Hackster.io project page](https://www.hackster.io/andreioros) 
 - twitter [@orosandrei](https://twitter.com/orosandrei)
