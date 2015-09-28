@@ -116,8 +116,13 @@ function ApplicationHM(appName, appPort) {
 					parent.AlertMode.AlarmCounter = 0;					
 
 					//notify connected clients that Alarm is over
-					if(parent.appClients.length > 0)
-						parent.io.sockets.emit('alarm', false);		
+					if(parent.appClients.length > 0) {
+						parent.io.sockets.emit('alarm', false);
+					}
+					else{
+						//stop webcam if no client connected & alarm over
+						parent.Webcam.Stop();
+					}		
 					
 					console.log(parent.DateTimeNow() + "(i) Alert - Alarm over");
 				}, this.parent.AlertMode.AlarmTimeSpan * 60000, parent); //timespan is in minutes so we convert to ms
