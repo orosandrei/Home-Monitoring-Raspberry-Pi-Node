@@ -103,22 +103,9 @@ My webcam is a low-end 5+ years old 2mp device, but for those of you with better
 
 Video resolutions & fps can be configured from the ```/static/js/script.js``` file 
 ```javascript
-//only check quality settings
-if(ui.quality480p.prop('checked')) {
-	appConfig.monitoring.quality = "640x480";
-	appConfig.monitoring.fps = 25;
-}
-if(ui.quality720p.prop('checked')) { 
-	appConfig.monitoring.quality = "1280x720";			
-	appConfig.monitoring.fps = 25;
-}
-if(ui.quality1080p.prop('checked')) { 
-	appConfig.monitoring.quality = "1920x1080";			
-	appConfig.monitoring.fps = 25;
-}
-	
-//send to server new config settings
-socket.emit('update config quality', appConfig);
+	ui.quality480p.change(function(){ ConfigUpdateQuality("640x480",25); });
+	ui.quality720p.change(function(){ ConfigUpdateQuality("1280x720",15); });
+	ui.quality1080p.change(function(){ ConfigUpdateQuality("1920x1080",5); });	
 ```
  
 #### Alert Mode 
